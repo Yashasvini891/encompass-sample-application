@@ -1,0 +1,70 @@
+name: Deploy React App to S3
+
+
+on:
+  push:
+    branches:
+      - develop
+
+
+permissions:
+  id-token: write
+  contents: read
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+
+    defaults:
+      run:
+        working-directory: epc-sample-app
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22.12
+
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: epc-sample-app/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('epc-sample-app/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+
+      - name: Install dependencies
+        run: npm ci
+
+
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
