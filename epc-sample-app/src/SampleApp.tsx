@@ -9,9 +9,9 @@ import { isEncompassIframe, useEpc, EpcClient } from './epc';
  */
 
 /** Product names that target the Encompass concept (non-prod) environment. */
-const CONCEPT_PRODUCTS = [
-    // 'yourcompany.yourproductdev.epc',
-    // 'yourcompany.yourproductqa.epc',
+const CONCEPT_PRODUCTS: any[] = [
+  // 'yourcompany.yourproductdev.epc',
+  // 'yourcompany.yourproductqa.epc',
 ];
 
 const EncompassMode = () => {
