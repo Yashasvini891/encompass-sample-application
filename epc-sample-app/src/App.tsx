@@ -1,24 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SampleApp from "./SampleApp";
+import DetailsView from "./DetailsView"; // Import your new separate component
 
-// 1. Create your Order view component layout
+// Inline placeholder for Order View
 const OrderView = () => (
   <div style={{ padding: "30px", fontFamily: "sans-serif" }}>
     <h2>🛒 New Order Creation Page</h2>
     <p>
-      No existing transaction context was detected. Ready to create a new
-      record.
-    </p>
-  </div>
-);
-
-// 2. Create your Details view component layout
-const DetailsView = () => (
-  <div style={{ padding: "30px", fontFamily: "sans-serif" }}>
-    <h2>📄 Existing Transaction Details Page</h2>
-    <p>
-      Successfully caught your transaction context and auto-routed inside
-      Encompass.
+      Please populate the details to dispatch a new product token workflow
+      request.
     </p>
   </div>
 );
@@ -27,10 +17,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* The root landing path "/" launches your SampleApp component */}
+        {/* Entry point handling Encompass context checks */}
         <Route path="/" element={<SampleApp />} />
 
-        {/* The target paths your EncompassMode component routes towards */}
+        {/* Redirect targets */}
         <Route path="/order" element={<OrderView />} />
         <Route path="/details/:transactionId" element={<DetailsView />} />
       </Routes>
