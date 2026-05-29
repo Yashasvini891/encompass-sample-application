@@ -41,9 +41,9 @@ const DetailsView = () => {
         setError(null);
 
         const payload = {
-          message_name: "GET_ORIGIN",
-          originId: originId || transactionId,
-          partnerAccessToken: partnerAccessToken || "",
+          messageName: "GET_ORIGIN",
+          origin_id: originId || transactionId,
+          partner_access_token: partnerAccessToken || "",
         };
 
         const response = await fetch("/origin", {
