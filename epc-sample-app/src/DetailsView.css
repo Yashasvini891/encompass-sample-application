@@ -1,0 +1,111 @@
+/* Container Layout */
+.loan-details-container {
+    padding: 24px;
+    background-color: #f7f9fc;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Loan Details Card */
+.loan-details-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eaeaea;
+    margin-bottom: 24px;
+}
+
+.loan-details-title {
+    margin: 0 0 20px 0;
+    fontSize: 18px;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+/* Two-Column Responsive Flex Grid */
+.loan-details-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.loan-details-column {
+    flex: 1 1 45%;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Row Parameter Styling */
+.loan-details-row {
+    display: flex;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.loan-details-label {
+    color: #667085;
+    width: 45%;
+    flex-shrink: 0;
+}
+
+.loan-details-value {
+    color: #0a1d37;
+    font-weight: 700;
+    width: 55%;
+    word-break: break-word;
+}
+
+.loan-details-uuid {
+    font-size: 13px;
+    color: #2e3a59;
+}
+
+.loan-details-edit-icon {
+    margin-left: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* Dotted Drag & Drop Zone */
+.policy-upload-zone {
+    border: 2px dashed #0a1d37;
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    background-color: #f5f9fc;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.policy-upload-zone.active {
+    background-color: #f0f5fa;
+    border-color: #003366;
+}
+
+.policy-upload-label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #0a1d37;
+    font-size: 15px;
+}
+
+.policy-upload-text-underline {
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.policy-upload-text-normal {
+    color: #333;
+    margin-left: 4px;
+}
