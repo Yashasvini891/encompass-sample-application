@@ -40,6 +40,7 @@ const EncompassMode = () => {
             state: {
               originId: transactionOrigin.id,
               partnerAccessToken: transactionOrigin.partnerAccessToken,
+              accessToken, // [cite: 50] Pass the access token if needed for API calls in the details view
             },
           });
         } else {
