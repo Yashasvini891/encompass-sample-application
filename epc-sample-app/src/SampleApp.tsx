@@ -118,8 +118,8 @@ const SampleApp = () => {
       .catch(() => setMode("standalone")); // [cite: 59]
   }, [mode]);
 
-  if (mode === "loading") return <div />; // [cite: 60]
-  return mode === "encompass" ? <EncompassMode /> : <StandaloneMode />; // [cite: 60]
+  if (mode === "loading") return <div />;
+  return mode === "encompass" ? <EncompassMode /> : <StandaloneMode />;
 };
 
-export default SampleApp; // [cite: 61]
+export default SampleApp;
