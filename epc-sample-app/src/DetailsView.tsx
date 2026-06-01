@@ -38,7 +38,7 @@ const DetailsView = () => {
         setError(null);
 
         const payload = {
-          messageName: "GET_ORIGIN",
+          messageName: "epc_origin-R",
           origin_id: originId || transactionId,
           partner_access_token: partnerAccessToken || "",
         };

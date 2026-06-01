@@ -78,26 +78,22 @@ const EncompassMode = () => {
 };
 
 const StandaloneMode = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
-    // 👇 simulate transaction id for testing
-    const testTransactionId = "TEST123";
+    const partnerAccessToken = "TEST_TOKEN_123";
 
-    if (testTransactionId) {
-      console.log("Standalone → navigating to details");
-      navigate(`/details/${testTransactionId}`);
-    } else {
-      console.log("Standalone → navigating to new order");
-      navigate("/order");
-    }
-  }, [navigate]);
+    console.log("🔥 STANDALONE RUNNING");
+    console.log("🔥 TOKEN:", partnerAccessToken);
 
-  return (
-    <div>
-      <h2>Standalone Mode - DEPLOY TEST</h2>
-    </div>
-  );
+    const payload = {
+      messageName: "GET_ORIGIN",
+      origin_id: "TEST123",
+      partner_access_token: partnerAccessToken,
+    };
+
+    console.log("🔥 FINAL PAYLOAD:", payload);
+  }, []);
+
+  return <h2>Standalone TEST</h2>;
 };
 const SampleApp = () => {
   // [cite: 57]
