@@ -77,30 +77,38 @@ const EncompassMode = () => {
 };
 
 const StandaloneMode = () => {
-   const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const partnerAccessToken = "TEST_TOKEN_123";
+    const initializeStandalone = async () => {
+      try {
+        const accessToken = await getAccessToken();
 
-    const originId = "TEST123";
+        const partnerAccessToken = "TEST_TOKEN_123";
+        const originId = "TEST123";
 
-    console.log("🔥 STANDALONE RUNNING");
+        const payload = {
+          messageName: "epc_origin-R",
+          origin_id: originId,
+          partner_access_token: partnerAccessToken,
+        };
 
-    const payload = {
-      messageName: "epc_origin-R",
-      origin_id: originId,
-      partner_access_token: partnerAccessToken,
+        console.log(" FINAL PAYLOAD:", payload);
+
+        navigate(`/details/${originId}`, {
+          state: {
+            originId,
+            partnerAccessToken,
+            accessToken,
+          },
+        });
+      } catch (error) {
+        console.error("Failed to fetch access token:", error);
+      }
     };
 
-    console.log("🔥 FINAL PAYLOAD:", payload);
-
-    // 👉 IMPORTANT: pass via navigation or storage
-    navigate(`/details/${originId}`, {
-      state: {
-        originId,
-        partnerAccessToken,
-      },
-    });
-  }, []);
+    initializeStandalone();
+  }, [navigate]);
 
   return <h2>Standalone TEST</h2>;
 };

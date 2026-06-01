@@ -1,5 +1,5 @@
 export const getAccessToken = async () => {
-  const url = import.meta.env.VITE_APP_OAUTH_URL;
+
 
   const body = new URLSearchParams();
 
@@ -8,7 +8,7 @@ export const getAccessToken = async () => {
   body.append("client_secret", import.meta.env.VITE_APP_CLIENT_SECRET);
   body.append("scope", import.meta.env.VITE_APP_SCOPE);
 
-  const response = await fetch(url, {
+  const response = await fetch("https://concept.api.elliemae.com/oauth2/v1/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
