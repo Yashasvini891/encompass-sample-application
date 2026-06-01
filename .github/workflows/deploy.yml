@@ -51,12 +51,12 @@ jobs:
 
 
       - name: Build project
-    run: |
-      export VITE_APP_OAUTH_URL=${{ secrets.VITE_APP_OAUTH_URL }}
-      export VITE_APP_CLIENT_ID=${{ secrets.VITE_APP_CLIENT_ID }}
-      export VITE_APP_CLIENT_SECRET=${{ secrets.VITE_APP_CLIENT_SECRET }}
-      export VITE_APP_SCOPE=${{ secrets.VITE_APP_SCOPE }}
-      npm run build
+        run: |
+          export VITE_APP_OAUTH_URL=${{ secrets.VITE_APP_OAUTH_URL }}
+          export VITE_APP_CLIENT_ID=${{ secrets.VITE_APP_CLIENT_ID }}
+          export VITE_APP_CLIENT_SECRET=${{ secrets.VITE_APP_CLIENT_SECRET }}
+          export VITE_APP_SCOPE=${{ secrets.VITE_APP_SCOPE }}
+          npm run build
 
 
       - name: Configure AWS credentials
