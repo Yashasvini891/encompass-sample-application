@@ -32,15 +32,18 @@ const DetailsView = () => {
           origin_id: originId || transactionId,
           partner_access_token: partnerAccessToken || "",
         };
-        console.log("API:", `${BASE_URL}/origin`);
-        const response = await fetch(`${BASE_URL}/origin`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${partnerAccessToken}`, 
-          },
-          body: JSON.stringify(payload),
-        });
+       const response = await window.fetch(`${BASE_URL}/origin`, {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${partnerAccessToken}`,
+         },
+         body: JSON.stringify(payload),
+       });
+
+       // 👇 ADD IT RIGHT HERE
+       console.log("ACTUAL URL:", response.url);
+
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
         }
