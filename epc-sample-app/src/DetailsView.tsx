@@ -8,8 +8,7 @@ interface DisplayLoanData {
   loanNumber: string;
   streetAddress: string;
 }
-const BASE_URL = "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev";
-
+const BASE_URL = import.meta.env.VITE_API_URL;
 const DetailsView = () => {
   const { transactionId } = useParams<{ transactionId: string }>();
   const location = useLocation();
@@ -33,15 +32,15 @@ const DetailsView = () => {
           origin_id: originId || transactionId,
           partner_access_token: partnerAccessToken || "",
         };
-        console.log("Calling API:", `${BASE_URL}/origin`);
+        console.log("API:", `${BASE_URL}/origin`);
         const response = await fetch(`${BASE_URL}/origin`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${partnerAccessToken}`, 
           },
           body: JSON.stringify(payload),
         });
-
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
         }
