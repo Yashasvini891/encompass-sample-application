@@ -8,7 +8,7 @@ interface DisplayLoanData {
   loanNumber: string;
   streetAddress: string;
 }
-const BASE_URL = import.meta.env.VITE_API_URL;
+
 const DetailsView = () => {
   const { transactionId } = useParams<{ transactionId: string }>();
   const location = useLocation();
@@ -16,7 +16,6 @@ const DetailsView = () => {
   const { originId, partnerAccessToken } =
     (location.state as { originId?: string; partnerAccessToken?: string }) ||
     {};
-
   const [loanData, setLoanData] = useState<DisplayLoanData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,14 +31,17 @@ const DetailsView = () => {
           origin_id: originId || transactionId,
           partner_access_token: partnerAccessToken || "",
         };
-       const response = await window.fetch(`${BASE_URL}/origin`, {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-           Authorization: `Bearer ${partnerAccessToken}`,
+       const response = await window.fetch(
+         `https://s6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
+         {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+             Authorization: `Bearer ${partnerAccessToken}`,
+           },
+           body: JSON.stringify(payload),
          },
-         body: JSON.stringify(payload),
-       });
+       );
 
        // 👇 ADD IT RIGHT HERE
        console.log("ACTUAL URL:", response.url);
