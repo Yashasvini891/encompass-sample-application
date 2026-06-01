@@ -49,6 +49,7 @@ const DetailsView = () => {
           `https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
           {
             method: "POST",
+            mode: "cors",
             headers: {
               "Content-Type": "application/json",
               //  Header stripped per Team Lead's instructions. Token is strictly body payload.
