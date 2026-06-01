@@ -8,7 +8,6 @@ interface DisplayLoanData {
   loanNumber: string;
   streetAddress: string;
 }
-const BASE_URL = import.meta.env.VITE_API_URL;
 const DetailsView = () => {
   const { transactionId } = useParams<{ transactionId: string }>();
   const location = useLocation();
@@ -34,14 +33,17 @@ const DetailsView = () => {
 
         };
 
-        const response = await fetch(`${BASE_URL}/origin`, {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await window.fetch(
+          `https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
+          {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
           },
-          body: JSON.stringify(payload),
-        });
+        );
 
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
