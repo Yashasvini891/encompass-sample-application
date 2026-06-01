@@ -13,52 +13,61 @@ const DetailsView = () => {
   const { transactionId } = useParams<{ transactionId: string }>();
   const location = useLocation();
 
-  // 1️⃣ CHANGE: Added safe optional chaining (?.) and an empty fallback object (|| {})
-  // This prevents the code from completely freezing if a user refreshes or navigates here directly.
-  const { originId, partnerAccessToken } =
-    (location?.state as { originId?: string; partnerAccessToken?: string }) ||
-    {};
+  // 🛠️ FIX 1: Safely read the properties using optional chaining.
+  // This prevents the component from crashing if Encompass strips location.state.
+  const stateData = location?.state as {
+    originId?: string;
+    partnerAccessToken?: string;
+  } | null;
+  const originId = stateData?.originId || "";
+  const partnerAccessToken = stateData?.partnerAccessToken || "";
 
   const [loanData, setLoanData] = useState<DisplayLoanData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 🛠️ FIX 2: Place an un-isolated log straight out in the open component body.
+  // This guarantees something will print to the console the millisecond the file mounts.
+  console.log("ℹ️ DetailsView file read successfully by the browser engine!", {
+    urlParamId: transactionId,
+    stateOriginId: originId,
+    hasToken: !!partnerAccessToken,
+  });
+
   useEffect(() => {
-    // 2️⃣ CHANGE: Moved the log to the ABSOLUTE FIRST LINE of the hook.
-    // This proves the component successfully mounted and React executed the lifecycle.
-    console.log("🟢 useEffect successfully triggered!", {
-      transactionId,
-      originId,
-      hasToken: !!partnerAccessToken,
-    });
+    console.log("🟢 useEffect has successfully fired inside the iframe!");
 
     const fetchLoanDetails = async () => {
       try {
         setLoading(true);
         setError(null);
 
+        // Fallback target initialization
+        const targetOriginId = originId || transactionId || "";
+
         const payload = {
           messageName: "GET_ORIGIN",
-          origin_id: originId || transactionId,
-          partner_access_token: partnerAccessToken || "",
+          origin_id: targetOriginId,
+          partner_access_token: partnerAccessToken,
         };
 
-        console.log("📦 Dispatching Payload to AWS API Gateway:", payload);
+        console.log("📦 Dispatched Body Payload Configuration:", payload);
 
+        // Explicit absolute endpoint execution bypassing global env caches
         const response = await window.fetch(
           `https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              // ❌ Header stripped per Team Lead's instructions. Token is strictly body payload.
+              // ❌ Authorization header removed per your Team Lead's explicit feedback
             },
             body: JSON.stringify(payload),
           },
         );
 
         console.log("📥 ACTUAL URL RESPONDED:", response.url);
-        console.log("🚦 RESPONSE STATUS:", response.status);
+        console.log("🚦 RESPONSE STATUS CODE:", response.status);
 
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
@@ -97,7 +106,7 @@ const DetailsView = () => {
           streetAddress,
         });
       } catch (err: any) {
-        console.error("❌ Catch Block Intercepted Error:", err);
+        console.error("❌ Fetch execution block failure:", err);
         setError(err?.message || "Failed to fetch loan details.");
         setLoanData(null);
       } finally {
@@ -105,7 +114,14 @@ const DetailsView = () => {
       }
     };
 
-    fetchLoanDetails();
+    if (transactionId || originId) {
+      fetchLoanDetails();
+    } else {
+      console.warn(
+        "⚠️ Core execution aborted: Missing context tracking identifiers.",
+      );
+      setLoading(false);
+    }
   }, [transactionId, originId, partnerAccessToken]);
 
   if (loading) {
