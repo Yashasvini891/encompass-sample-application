@@ -77,14 +77,28 @@ const EncompassMode = () => {
   );
 };
 
-const StandaloneMode = () => (
-  // [cite: 56]
-  <div>
-    <h2>Standalone Mode</h2> {/* [cite: 56] */}
-    {/* Your standalone (non-Encompass) UI here */} {/* [cite: 56] */}
-  </div>
-);
+const StandaloneMode = () => {
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    // 👇 simulate transaction id for testing
+    const testTransactionId = "TEST123";
+
+    if (testTransactionId) {
+      console.log("Standalone → navigating to details");
+      navigate(`/details/${testTransactionId}`);
+    } else {
+      console.log("Standalone → navigating to new order");
+      navigate("/order");
+    }
+  }, [navigate]);
+
+  return (
+    <div>
+      <h2>Standalone Mode - DEPLOY TEST</h2>
+    </div>
+  );
+};
 const SampleApp = () => {
   // [cite: 57]
   // Fixed the cascading render issue by wrapping the synchronous frame checks directly inside the state initializer closure
