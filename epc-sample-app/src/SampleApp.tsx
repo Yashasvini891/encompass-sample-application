@@ -31,26 +31,22 @@ const EncompassMode = () => {
         const currentTransactionId = transactionOrigin.id;
 
         // Condition evaluation: check whether transaction is an existing ID or a new transaction
-       if (currentTransactionId) {
-         console.log(
-           ` Existing ID context detected. Moving to: /details/${currentTransactionId}`,
-         );
+        if (currentTransactionId) {
+          console.log(
+            ` Existing ID context detected. Moving to: /details/${currentTransactionId}`,
+          );
 
-         // Pass the data context keys along safely through the router state channel
-      sessionStorage.setItem(
-        "partnerAccessToken",
-        transactionOrigin.partnerAccessToken,
-      );
-
-      navigate(`/details/${currentTransactionId}`, {
-        state: {
-          originId: transactionOrigin.id,
-        },
-      });
-       } else {
-         // Else - navigate to new order view
-         navigate("/order");
-       }
+          // Pass the data context keys along safely through the router state channel
+          navigate(`/details/${currentTransactionId}`, {
+            state: {
+              originId: transactionOrigin.id,
+              partnerAccessToken: transactionOrigin.partnerAccessToken,
+            },
+          });
+        } else {
+          // Else - navigate to new order view
+          navigate("/order");
+        }
       } catch (err) {
         console.error(
           "Failed to execute context evaluation navigation rules:",
