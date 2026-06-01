@@ -33,7 +33,7 @@ const DetailsView = () => {
           origin_id: originId || transactionId,
           partner_access_token: partnerAccessToken || "",
         };
-
+        console.log("Calling API:", `${BASE_URL}/origin`);
         const response = await fetch(`${BASE_URL}/origin`, {
           method: "POST",
           headers: {
