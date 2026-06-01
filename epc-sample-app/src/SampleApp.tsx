@@ -40,6 +40,7 @@ const EncompassMode = () => {
             state: {
               originId: transactionOrigin.id,
               partnerAccessToken: transactionOrigin.partnerAccessToken,
+              accessToken, // [cite: 50] Pass the access token if needed for API calls in the details view
             },
           });
         } else {
@@ -93,12 +94,6 @@ const StandaloneMode = () => {
     console.log("🔥 FINAL PAYLOAD:", payload);
 
     // 👉 IMPORTANT: pass via navigation or storage
-    navigate(`/details/${originId}`, {
-      state: {
-        originId,
-        partnerAccessToken,
-      },
-    });
   }, []);
 
   return <h2>Standalone TEST</h2>;
