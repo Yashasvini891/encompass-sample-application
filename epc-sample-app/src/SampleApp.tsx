@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Added for route navigation
 import { isEncompassIframe, useEpc, EpcClient } from "./epc"; // [cite: 46]
+import { getAccessToken } from "./services/authService";
 
 /**
  * Template iframe application for a new EPC product.
@@ -28,7 +29,9 @@ const EncompassMode = () => {
 
       try {
         // Extract unique identifier string from the EPC framework transaction context dataset
+        const accessToken = await getAccessToken();
         const currentTransactionId = transactionOrigin.id;
+        
 
         // Condition evaluation: check whether transaction is an existing ID or a new transaction
         if (currentTransactionId) {
@@ -77,16 +80,25 @@ const StandaloneMode = () => {
   useEffect(() => {
     const partnerAccessToken = "TEST_TOKEN_123";
 
+    const originId = "TEST123";
+
     console.log("🔥 STANDALONE RUNNING");
-    console.log("🔥 TOKEN:", partnerAccessToken);
 
     const payload = {
-      messageName: "GET_ORIGIN",
-      origin_id: "TEST123",
+      messageName: "epc_origin-R",
+      origin_id: originId,
       partner_access_token: partnerAccessToken,
     };
 
     console.log("🔥 FINAL PAYLOAD:", payload);
+
+    // 👉 IMPORTANT: pass via navigation or storage
+    navigate(`/details/${originId}`, {
+      state: {
+        originId,
+        partnerAccessToken,
+      },
+    });
   }, []);
 
   return <h2>Standalone TEST</h2>;
