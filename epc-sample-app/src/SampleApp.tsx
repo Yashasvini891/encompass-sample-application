@@ -77,6 +77,7 @@ const EncompassMode = () => {
 };
 
 const StandaloneMode = () => {
+   const navigate = useNavigate(); 
   useEffect(() => {
     const partnerAccessToken = "TEST_TOKEN_123";
 
