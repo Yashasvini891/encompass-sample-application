@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Added for route navigation
 import { isEncompassIframe, useEpc, EpcClient } from "./epc"; // [cite: 46]
 import { getAccessToken } from "./services/authService";
-
 /**
  * Template iframe application for a new EPC product.
  *
@@ -94,6 +93,12 @@ const StandaloneMode = () => {
     console.log("🔥 FINAL PAYLOAD:", payload);
 
     // 👉 IMPORTANT: pass via navigation or storage
+    navigate(`/details/${originId}`, {
+      state: {
+        originId,
+        partnerAccessToken,
+      },
+    });
   }, []);
 
   return <h2>Standalone TEST</h2>;
