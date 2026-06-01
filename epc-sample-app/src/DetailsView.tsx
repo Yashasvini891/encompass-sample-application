@@ -21,7 +21,9 @@ const DetailsView = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log(" useEffect triggered");
     const fetchLoanDetails = async () => {
+
       try {
         setLoading(true);
         setError(null);
@@ -31,20 +33,19 @@ const DetailsView = () => {
           origin_id: originId || transactionId,
           partner_access_token: partnerAccessToken || "",
         };
-       const response = await window.fetch(
-         `https://s6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
-         {
-           method: "POST",
-           headers: {
-             "Content-Type": "application/json",
-             Authorization: `Bearer ${partnerAccessToken}`,
-           },
-           body: JSON.stringify(payload),
-         },
-       );
+        const response = await window.fetch(
+          `https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          },
+        );
 
-       // 👇 ADD IT RIGHT HERE
-       console.log("ACTUAL URL:", response.url);
+        console.log("ACTUAL URL:", response.url);
+        console.log("PAYLOAD:", payload);
 
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
