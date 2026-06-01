@@ -9,7 +9,7 @@ import { isEncompassIframe, useEpc, EpcClient } from "./epc"; // [cite: 46]
  * Update CONCEPT_PRODUCTS with your EPC product names.
  */ // [cite: 47, 48]
 
-/** Product names that target the Encompass concept (non-prod) environment. */ // [cite: 49]
+/** Product names that target the Encompass concept (non-prod) environment. */ 
 const CONCEPT_PRODUCTS: any[] = [
   // [cite: 49]
   // 'yourcompany.yourproductdev.epc',
@@ -18,13 +18,13 @@ const CONCEPT_PRODUCTS: any[] = [
 
 const EncompassMode = () => {
   const { client, transactionOrigin, applicationInfo, loading, error } =
-    useEpc(CONCEPT_PRODUCTS); // [cite: 50]
+    useEpc(CONCEPT_PRODUCTS);
   const navigate = useNavigate(); // Hook for executing route redirections
 
   useEffect(() => {
     const processRoutingContext = async () => {
       // Wait silently until the useEpc hook successfully retrieves transaction context
-      if (!transactionOrigin || !applicationInfo) return; // [cite: 51]
+      if (!transactionOrigin || !applicationInfo) return; 
 
       try {
         // Extract unique identifier string from the EPC framework transaction context dataset
@@ -32,10 +32,6 @@ const EncompassMode = () => {
 
         // Condition evaluation: check whether transaction is an existing ID or a new transaction
         if (currentTransactionId) {
-          console.log(
-            ` Existing ID context detected. Moving to: /details/${currentTransactionId}`,
-          );
-
           // Pass the data context keys along safely through the router state channel
           navigate(`/details/${currentTransactionId}`, {
             state: {
@@ -96,36 +92,31 @@ const StandaloneMode = () => {
   return <h2>Standalone TEST</h2>;
 };
 const SampleApp = () => {
-  // [cite: 57]
-  // Fixed the cascading render issue by wrapping the synchronous frame checks directly inside the state initializer closure
   const [mode, setMode] = useState<"loading" | "encompass" | "standalone">(
     () => {
-      // [cite: 57]
-      const detected = isEncompassIframe(); // [cite: 58]
+      const detected = isEncompassIframe(); 
 
       if (detected === false) {
-        // [cite: 58]
-        return "standalone"; // [cite: 58]
-      } // [cite: 58]
+        return "standalone"; 
+      }
 
       if (detected === true) {
-        // [cite: 58]
-        return "encompass"; // [cite: 58]
-      } // [cite: 59]
+        return "encompass";
+      }
 
       return "loading";
     },
   );
 
   useEffect(() => {
-    // Only run asynchronous client validation handshake if initial detection checks were fully ambiguous ('loading')
+   
     if (mode !== "loading") return;
 
-    const probe = new EpcClient(); // [cite: 59]
+    const probe = new EpcClient();
     probe
-      .connect() // [cite: 59]
-      .then(() => setMode("encompass")) // [cite: 59]
-      .catch(() => setMode("standalone")); // [cite: 59]
+      .connect()
+      .then(() => setMode("encompass"))
+      .catch(() => setMode("standalone")); 
   }, [mode]);
 
   if (mode === "loading") return <div />;

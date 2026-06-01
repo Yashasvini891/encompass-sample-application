@@ -8,13 +8,10 @@ interface DisplayLoanData {
   loanNumber: string;
   streetAddress: string;
 }
-
+const BASE_URL = import.meta.env.VITE_API_URL;
 const DetailsView = () => {
   const { transactionId } = useParams<{ transactionId: string }>();
   const location = useLocation();
-
-  // 1️ CHANGE: Added safe optional chaining (?.) and an empty fallback object (|| {})
-  // This prevents the code from completely freezing if a user refreshes or navigates here directly.
   const { originId, partnerAccessToken } =
     (location?.state as { originId?: string; partnerAccessToken?: string }) ||
     {};
@@ -24,13 +21,6 @@ const DetailsView = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // 2️CHANGE: Moved the log to the ABSOLUTE FIRST LINE of the hook.
-    // This proves the component successfully mounted and React executed the lifecycle.
-    console.log(" useEffect successfully triggered!", {
-      transactionId,
-      originId,
-      hasToken: !!partnerAccessToken,
-    });
 
     const fetchLoanDetails = async () => {
       try {
@@ -41,25 +31,17 @@ const DetailsView = () => {
           messageName: "epc_origin-R",
           origin_id: originId || transactionId,
           partner_access_token: partnerAccessToken || "",
+
         };
 
-        console.log(" Dispatching Payload to AWS API Gateway:", payload);
-
-        const response = await window.fetch(
-          `https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
-          {
-            method: "POST",
-            mode: "cors",
-            headers: {
-              "Content-Type": "application/json",
-              //  Header stripped per Team Lead's instructions. Token is strictly body payload.
-            },
-            body: JSON.stringify(payload),
+        const response = await fetch(`${BASE_URL}/origin`, {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
-
-        console.log(" ACTUAL URL RESPONDED:", response.url);
-        console.log(" RESPONSE STATUS:", response.status);
+          body: JSON.stringify(payload),
+        });
 
         if (!response.ok) {
           throw new Error(`Server returned status: ${response.status}`);
