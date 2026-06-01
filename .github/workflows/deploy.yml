@@ -53,10 +53,10 @@ jobs:
       - name: Build project
         run: npm run build
         env:
-            VITE_OAUTH_URL: ${{ secrets.VITE_OAUTH_URL }}
-            VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
-            VITE_CLIENT_SECRET: ${{ secrets.VITE_CLIENT_SECRET }}
-            VITE_SCOPE: ${{ secrets.VITE_SCOPE }}
+            VITE_APP_OAUTH_URL: ${{ secrets.VITE_APP_OAUTH_URL }}
+            VITE_APP_CLIENT_ID: ${{ secrets.VITE_APP_CLIENT_ID }}
+            VITE_APP_CLIENT_SECRET: ${{ secrets.VITE_APP_CLIENT_SECRET }}
+            VITE_APP_SCOPE: ${{ secrets.VITE_APP_SCOPE }}
 
 
       - name: Configure AWS credentials
