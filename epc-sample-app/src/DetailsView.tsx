@@ -20,7 +20,10 @@ const DetailsView = () => {
     partnerAccessToken?: string;
   } | null;
   const originId = stateData?.originId || "";
-  const partnerAccessToken = stateData?.partnerAccessToken || "";
+ const partnerAccessToken =
+   stateData?.partnerAccessToken ||
+   sessionStorage.getItem("partnerAccessToken") ||
+   "";
 
   const [loanData, setLoanData] = useState<DisplayLoanData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);

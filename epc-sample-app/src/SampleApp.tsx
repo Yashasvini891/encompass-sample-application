@@ -37,12 +37,16 @@ const EncompassMode = () => {
          );
 
          // Pass the data context keys along safely through the router state channel
-         navigate(`/details/${currentTransactionId}`, {
-           state: {
-             originId: transactionOrigin.id,
-             partnerAccessToken: transactionOrigin.partnerAccessToken,
-           },
-         });
+      sessionStorage.setItem(
+        "partnerAccessToken",
+        transactionOrigin.partnerAccessToken,
+      );
+
+      navigate(`/details/${currentTransactionId}`, {
+        state: {
+          originId: transactionOrigin.id,
+        },
+      });
        } else {
          // Else - navigate to new order view
          navigate("/order");
