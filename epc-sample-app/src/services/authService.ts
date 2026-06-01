@@ -1,14 +1,12 @@
 export const getAccessToken = async () => {
-  const url = "https://api.em/oauth2/v1/token";
+  const url = import.meta.env.VITE_OAUTH_URL;
 
   const body = new URLSearchParams();
 
   body.append("grant_type", "client_credentials");
-  body.append("client_id", "YOUR_CLIENT_ID");
-  body.append("client_secret", "YOUR_CLIENT_SECRET");
-
-  // 🔥 IMPORTANT: add scope (you were missing this)
-  body.append("scope", "YOUR_SCOPE_VALUE");
+  body.append("client_id", import.meta.env.VITE_CLIENT_ID);
+  body.append("client_secret", import.meta.env.VITE_CLIENT_SECRET);
+  body.append("scope", import.meta.env.VITE_SCOPE);
 
   const response = await fetch(url, {
     method: "POST",
@@ -24,6 +22,5 @@ export const getAccessToken = async () => {
   }
 
   const data = await response.json();
-
   return data.access_token;
 };
