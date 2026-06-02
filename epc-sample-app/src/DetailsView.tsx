@@ -121,7 +121,7 @@ const DetailsView = () => {
         <form onSubmit={handleSubmit} className="details-form-wrapper">
           <div className="primary-details-card">
             <div className="card-header">
-              <h2>Primary Details</h2>
+              <h2>Loan Details</h2>
             </div>
 
             <div className="card-body">
@@ -129,7 +129,7 @@ const DetailsView = () => {
                 {/* Row 1 */}
                 <div className="form-group">
                   <label className={loanData.borrowerName ? "floating" : ""}>
-                    Primary borrower First Name
+                     Borrower Name
                   </label>
                   <input
                     type="text"
