@@ -35,7 +35,6 @@ const DetailsView = () => {
             messageName: "epc_origin-R",
             origin_id: originId,
             partner_access_token: partnerAccessToken || "",
-            access_token: "0006XvvPlSLoKJ0pS8znNOcmECab",
           },
         };
 
