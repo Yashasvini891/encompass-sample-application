@@ -1,111 +1,129 @@
-/* Container Layout */
 .loan-details-container {
-    padding: 24px;
-    background-color: #f7f9fc;
-    min-height: 100vh;
+    padding: 30px;
+    background-color: #f8fafc;
+    max-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* Loan Details Card */
-.loan-details-card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eaeaea;
-    margin-bottom: 24px;
-}
-
-.loan-details-title {
-    margin: 0 0 20px 0;
-    fontSize: 18px;
-    font-weight: 700;
-    color: #0a1d37;
-}
-
-/* Two-Column Responsive Flex Grid */
-.loan-details-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-}
-
-.loan-details-column {
-    flex: 1 1 45%;
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-/* Row Parameter Styling */
-.loan-details-row {
-    display: flex;
-    align-items: flex-start;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.loan-details-label {
-    color: #667085;
-    width: 45%;
-    flex-shrink: 0;
-}
-
-.loan-details-value {
-    color: #0a1d37;
-    font-weight: 700;
-    width: 55%;
-    word-break: break-word;
-}
-
-.loan-details-uuid {
-    font-size: 13px;
-    color: #2e3a59;
-}
-
-.loan-details-edit-icon {
-    margin-left: 6px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-/* Dotted Drag & Drop Zone */
-.policy-upload-zone {
-    border: 2px dashed #0a1d37;
-    border-radius: 12px;
-    padding: 32px;
-    text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
-    background-color: #f5f9fc;
-    max-width: 100%;
-    margin: 0 auto;
+    align-items: flex-start;
 }
-
-.policy-upload-zone.active {
-    background-color: #f0f5fa;
-    border-color: #003366;
-}
-
-.policy-upload-label {
-    cursor: pointer;
+.details-form-wrapper {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    color: #0a1d37;
-    font-size: 15px;
+}
+.primary-details-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+.card-header {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 20px 24px;
+}
+.card-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+.card-body {
+    padding: 32px 24px;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 20px;
+    row-gap: 28px;
+}
+.form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.form-group.empty-placeholder {
+    visibility: hidden;
+    pointer-events: none;
+}
+.form-group input {
+    width: 100%;
+    height: 52px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #334155;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+.form-group input:focus {
+    border-color: #000000;
+    box-shadow: 0 0 0 1px #000000;
 }
 
-.policy-upload-text-underline {
-    text-decoration: underline;
+.form-group label {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #94a3b8;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    background-color: transparent;
+}
+.form-group input:focus ~ label,
+.form-group label.floating {
+    top: 0px;
+    font-size: 12px;
+    padding: 0 4px;
+    background-color: #ffffff;
+    color: #000000;
+    transform: translateY(-50%);
+}
+.form-actions-outside {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px; 
+    padding-right: 4px;
+}
+.submit-btn {
+    height: 46px;
+    padding: 0 32px;
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 14px;
     font-weight: 600;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
 }
 
-.policy-upload-text-normal {
-    color: #333;
-    margin-left: 4px;
+.submit-btn:hover {
+    background-color: #1e293b;
+}
+@media (max-width: 968px) {
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .form-group.empty-placeholder {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-actions-outside {
+        padding-right: 0;
+    }
+    .submit-btn {
+        width: 100%;
+    }
 }
