@@ -19,79 +19,89 @@ const DetailsView = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+useEffect(() => {
+  const fetchLoanDetails = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    const fetchLoanDetails = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+      const innerBody = {
+        messageName: "epc_origin-R",
+        origin_id: originId || transactionId,
+        partner_access_token: partnerAccessToken || "",
+        access_token: "0006AT4LG62LmgGA1ShFepdLIMOH", // replace with env or dynamic value
+      };
 
-        const payload = {
-          messageName: "epc_origin-R",
-          origin_id: originId || transactionId,
-          partner_access_token: partnerAccessToken || "",
+    
+      const payload = {
+        headers: {
+          "cognito-id": "not required",
+          message_name: "epc_origin-R",
+        },
+        body: JSON.stringify(innerBody),
+      };
 
-        };
-
-        const response = await window.fetch(
-          `https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/origin`,
-          {
-            method: "POST",
-            mode: "cors",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
+      const response = await window.fetch(
+        "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/origin",
+        {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify(payload),
+        },
+      );
 
-        if (!response.ok) {
-          throw new Error(`Server returned status: ${response.status}`);
-        }
-
-        const rawData = await response.json();
-
-        let parsedOrigin: any = {};
-        try {
-          if (rawData.origin) {
-            parsedOrigin = JSON.parse(rawData.origin.trim());
-          }
-        } catch (e) {
-          console.warn(" Origin parse failed:", e);
-        }
-
-        const firstRequestItem = rawData.originResponse?.[0]?.requests?.[0];
-        const applicationData = parsedOrigin?.loan?.applications?.[0];
-
-        const borrowerName = firstRequestItem
-          ? `${firstRequestItem.firstName} ${firstRequestItem.lastName}`
-          : applicationData?.borrower?.fullNameWithSuffix || "N/A";
-
-        const coBorrowerName =
-          applicationData?.coborrower?.fullNameWithSuffix || "N/A";
-        const loanNumber = rawData.loanNumber || "N/A";
-        const streetAddress =
-          firstRequestItem?.addressLine1 ||
-          applicationData?.borrower?.residences?.[0]?.urla2020StreetAddress ||
-          "N/A";
-
-        setLoanData({
-          borrowerName,
-          coBorrowerName,
-          loanNumber,
-          streetAddress,
-        });
-      } catch (err: any) {
-        console.error(" Catch Block Intercepted Error:", err);
-        setError(err?.message || "Failed to fetch loan details.");
-        setLoanData(null);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Server returned status: ${response.status}`);
       }
-    };
 
-    fetchLoanDetails();
-  }, [transactionId, originId, partnerAccessToken]);
+      const rawData = await response.json();
+
+      let parsedOrigin: any = {};
+      try {
+        if (rawData.origin) {
+          parsedOrigin = JSON.parse(rawData.origin.trim());
+        }
+      } catch (e) {
+        console.warn("Origin parse failed:", e);
+      }
+
+      const firstRequestItem = rawData.originResponse?.[0]?.requests?.[0];
+      const applicationData = parsedOrigin?.loan?.applications?.[0];
+
+      const borrowerName = firstRequestItem
+        ? `${firstRequestItem.firstName} ${firstRequestItem.lastName}`
+        : applicationData?.borrower?.fullNameWithSuffix || "N/A";
+
+      const coBorrowerName =
+        applicationData?.coborrower?.fullNameWithSuffix || "N/A";
+
+      const loanNumber = rawData.loanNumber || "N/A";
+
+      const streetAddress =
+        firstRequestItem?.addressLine1 ||
+        applicationData?.borrower?.residences?.[0]?.urla2020StreetAddress ||
+        "N/A";
+
+      setLoanData({
+        borrowerName,
+        coBorrowerName,
+        loanNumber,
+        streetAddress,
+      });
+    } catch (err: any) {
+      console.error("Catch Block Intercepted Error:", err);
+      setError(err?.message || "Failed to fetch loan details.");
+      setLoanData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchLoanDetails();
+}, [transactionId, originId, partnerAccessToken]);
 
   if (loading) {
     return (

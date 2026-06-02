@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Added for route navigation
 import { isEncompassIframe, useEpc, EpcClient } from "./epc"; // [cite: 46]
-import { getAccessToken } from "./services/authService";
 /**
  * Template iframe application for a new EPC product.
  *
@@ -28,7 +27,6 @@ const EncompassMode = () => {
 
       try {
         // Extract unique identifier string from the EPC framework transaction context dataset
-        const accessToken = await getAccessToken();
         const currentTransactionId = transactionOrigin.id;
         
 
@@ -39,7 +37,7 @@ const EncompassMode = () => {
             state: {
               originId: transactionOrigin.id,
               partnerAccessToken: transactionOrigin.partnerAccessToken,
-              accessToken, // [cite: 50] Pass the access token if needed for API calls in the details view
+             // [cite: 50] Pass the access token if needed for API calls in the details view
             },
           });
         } else {
@@ -82,7 +80,6 @@ const StandaloneMode = () => {
   useEffect(() => {
     const initializeStandalone = async () => {
       try {
-        const accessToken = await getAccessToken();
 
         const partnerAccessToken = "TEST_TOKEN_123";
         const originId = "TEST123";
@@ -99,7 +96,7 @@ const StandaloneMode = () => {
           state: {
             originId,
             partnerAccessToken,
-            accessToken,
+           
           },
         });
       } catch (error) {
