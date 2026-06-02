@@ -23,32 +23,22 @@ const EncompassMode = () => {
   useEffect(() => {
     const processRoutingContext = async () => {
       // Wait silently until the useEpc hook successfully retrieves transaction context
-      if (!transactionOrigin || !applicationInfo) return; 
+      if (!transactionOrigin || !applicationInfo) return;
 
       try {
         // Extract unique identifier string from the EPC framework transaction context dataset
-        // --- ADD THESE DEBUGGER CONSOLE LOGS ---
-        console.log("=== EPC DEBUGGING START ===");
+        const currentTransactionId = transactionOrigin.transactionId;
+
+        // --- JUST THE 2 CONSOLE LOGS ---
         console.log(
           "1. Full transactionOrigin object from Encompass:",
           transactionOrigin,
         );
-
-        // Safely grab the property combinations (handles both camelCase and snake_case framework variants)
-        const currentTransactionId =
-          (transactionOrigin as any).transactionId ||
-          (transactionOrigin as any).transaction_id;
-
         console.log(
-          "2. Extracted currentTransactionId is:",
+          "2. Evaluated currentTransactionId value is:",
           currentTransactionId,
         );
-        console.log(
-          "3. Session Launch wrapper ID (originId) is:",
-          (transactionOrigin as any).id,
-        );
-        console.log("=== EPC DEBUGGING END ===");
-       
+        // -------------------------------
 
         // Condition evaluation: check whether transaction is an existing ID or a new transaction
         if (currentTransactionId) {
@@ -57,12 +47,16 @@ const EncompassMode = () => {
             state: {
               originId: transactionOrigin.id,
               partnerAccessToken: transactionOrigin.partnerAccessToken,
-              // [cite: 50] Pass the access token if needed for API calls in the details view
             },
           });
         } else {
           // Else - navigate to new order view
-          navigate("/order");
+          navigate("/order", {
+            state: {
+              originId: transactionOrigin.id,
+              partnerAccessToken: transactionOrigin.partnerAccessToken,
+            },
+          });
         }
       } catch (err) {
         console.error(
@@ -75,7 +69,7 @@ const EncompassMode = () => {
     if (!loading && !error) {
       processRoutingContext();
     }
-  }, [transactionOrigin, applicationInfo, loading, error, navigate]); // [cite: 52]
+  }, [transactionOrigin, applicationInfo, loading, error, navigate]);// [cite: 52]
 
   // SHOW LOADER: While useEpc is setting up or navigating, display an explicit loading state
   if (loading) return <div>Connecting to Encompass...</div>; // [cite: 53]

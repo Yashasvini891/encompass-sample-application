@@ -4,6 +4,7 @@ import type { TransactionRequest } from "@elliemae/em-ssf-guest";
 export interface EpcTransactionOrigin {
   id: string;
   partnerAccessToken: string;
+  transactionId?: string;
 }
 
 export interface EpcApplicationInfo {
