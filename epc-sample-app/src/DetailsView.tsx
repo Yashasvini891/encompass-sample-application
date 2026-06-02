@@ -46,7 +46,7 @@ useEffect(() => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload), // ✅ stringify ONLY once here
+          body: JSON.stringify(payload),
         },
       );
 
@@ -54,21 +54,22 @@ useEffect(() => {
         throw new Error(`Server returned status: ${response.status}`);
       }
 
-      const rawData = await response.json();
+    const rawData = await response.json();
+     const originData = rawData?.origin_response;
 
-      const applicationData = rawData?.loan?.applications?.[0];
+     const applicationData = originData?.loan?.applications?.[0];
 
-      const borrowerName =
-        applicationData?.borrower?.fullNameWithSuffix || "N/A";
+     const borrowerName =
+       applicationData?.borrower?.fullNameWithSuffix || "N/A";
 
-      const coBorrowerName =
-        applicationData?.coborrower?.fullNameWithSuffix || "N/A";
+     const coBorrowerName =
+       applicationData?.coborrower?.fullNameWithSuffix || "N/A";
 
-      const loanNumber = rawData?.loan?.loanNumber || "N/A";
+     const loanNumber = originData?.loan?.loanNumber || "N/A";
 
-      const streetAddress =
-        applicationData?.borrower?.residences?.[0]?.urla2020StreetAddress ||
-        "N/A";
+     const streetAddress =
+       applicationData?.borrower?.residences?.[0]?.urla2020StreetAddress ||
+       "N/A";
 
       setLoanData({
         borrowerName,
