@@ -27,8 +27,28 @@ const EncompassMode = () => {
 
       try {
         // Extract unique identifier string from the EPC framework transaction context dataset
-        const currentTransactionId = transactionOrigin.id;
-        
+        // --- ADD THESE DEBUGGER CONSOLE LOGS ---
+        console.log("=== EPC DEBUGGING START ===");
+        console.log(
+          "1. Full transactionOrigin object from Encompass:",
+          transactionOrigin,
+        );
+
+        // Safely grab the property combinations (handles both camelCase and snake_case framework variants)
+        const currentTransactionId =
+          (transactionOrigin as any).transactionId ||
+          (transactionOrigin as any).transaction_id;
+
+        console.log(
+          "2. Extracted currentTransactionId is:",
+          currentTransactionId,
+        );
+        console.log(
+          "3. Session Launch wrapper ID (originId) is:",
+          (transactionOrigin as any).id,
+        );
+        console.log("=== EPC DEBUGGING END ===");
+       
 
         // Condition evaluation: check whether transaction is an existing ID or a new transaction
         if (currentTransactionId) {
@@ -37,7 +57,7 @@ const EncompassMode = () => {
             state: {
               originId: transactionOrigin.id,
               partnerAccessToken: transactionOrigin.partnerAccessToken,
-             // [cite: 50] Pass the access token if needed for API calls in the details view
+              // [cite: 50] Pass the access token if needed for API calls in the details view
             },
           });
         } else {
