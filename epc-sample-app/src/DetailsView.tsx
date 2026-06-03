@@ -119,7 +119,7 @@ const DetailsView = () => {
       //  WHAT IS CORRECT:
       const newTransactionId = await client.createTransaction({
         request: {
-          type: "Request Created",
+          type: "Submit Tax Wallet",
           options: {
             borrowerName: loanData.borrowerName,
             coBorrowerName: loanData.coBorrowerName,
