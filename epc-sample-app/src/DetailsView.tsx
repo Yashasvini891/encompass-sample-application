@@ -119,7 +119,7 @@ const DetailsView = () => {
       //  WHAT IS CORRECT:
       const newTransactionId = await client.createTransaction({
         request: {
-          type: "halcyon.taxwallettest.epc",
+          type: "Request Created",
           options: {
             borrowerName: loanData.borrowerName,
             coBorrowerName: loanData.coBorrowerName,
