@@ -103,35 +103,35 @@ const DetailsView = () => {
   };
 
   // 3. HANDLER UPDATED TO USE THE CLIENT FROM THE HOOK
+  // 3. HANDLER UPDATED TO USE THE CORRECT NESTED LAYOUT
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loanData || !client) {
-     
       return;
     }
 
     try {
       setIsCreatingTransaction(true);
       console.log(
-        "Sending all 4 fields using the client returned by useEpc...",
+        "Sending all 4 fields cleanly nested inside the request object wrapper...",
       );
 
-      // We pass the payload directly through your hook's initialized client
+      // We wrap the payload inside the required 'request' object property
       const newTransactionId = await client.createTransaction({
-        type: "ZIP Code Validation",
-        options: {
-          borrowerName: loanData.borrowerName,
-          coBorrowerName: loanData.coBorrowerName,
-          loanNumber: loanData.loanNumber,
-          streetAddress: loanData.streetAddress,
+        request: {
+          type: "ZIP Code Validation",
+          options: {
+            borrowerName: loanData.borrowerName,
+            coBorrowerName: loanData.coBorrowerName,
+            loanNumber: loanData.loanNumber,
+            streetAddress: loanData.streetAddress,
+          },
         },
       });
 
       console.log("Transaction registered successfully! ID:", newTransactionId);
-      
     } catch (err) {
       console.error("Failed to execute createTransaction:", err);
-     
     } finally {
       setIsCreatingTransaction(false);
     }
@@ -237,6 +237,6 @@ const DetailsView = () => {
       )}
     </div>
   );
-};
+};;
 
 export default DetailsView;
