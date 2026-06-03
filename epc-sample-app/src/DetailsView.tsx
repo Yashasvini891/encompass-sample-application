@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
+// 1. Import the hook from your epc directory
+import { useEpc } from "./epc/useEpc";
 import "./DetailsView.css";
 
 interface DisplayLoanData {
@@ -16,9 +18,16 @@ const DetailsView = () => {
     (location?.state as { originId?: string; partnerAccessToken?: string }) ||
     {};
 
+  // 2. Consume the useEpc hook right here inside your component
+  const { client, loading: epcLoading, error: epcError } = useEpc();
+
   const [loanData, setLoanData] = useState<DisplayLoanData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // State to track the transaction creation execution phase
+  const [isCreatingTransaction, setIsCreatingTransaction] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fetchLoanDetails = async () => {
@@ -82,33 +91,67 @@ const DetailsView = () => {
       }
     };
 
-    fetchLoanDetails();
+    // Only run your custom endpoint query once the origin parameters exist
+    if (originId) {
+      fetchLoanDetails();
+    }
   }, [transactionId, originId, partnerAccessToken]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!loanData) return;
     const { name, value } = e.target;
     setLoanData((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 3. HANDLER UPDATED TO USE THE CLIENT FROM THE HOOK
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitted Loan Data:", loanData);
+    if (!loanData || !client) {
+     
+      return;
+    }
+
+    try {
+      setIsCreatingTransaction(true);
+      console.log(
+        "Sending all 4 fields using the client returned by useEpc...",
+      );
+
+      // We pass the payload directly through your hook's initialized client
+      const newTransactionId = await client.createTransaction({
+        type: "ZIP Code Validation",
+        options: {
+          borrowerName: loanData.borrowerName,
+          coBorrowerName: loanData.coBorrowerName,
+          loanNumber: loanData.loanNumber,
+          streetAddress: loanData.streetAddress,
+        },
+      });
+
+      console.log("Transaction registered successfully! ID:", newTransactionId);
+      
+    } catch (err) {
+      console.error("Failed to execute createTransaction:", err);
+     
+    } finally {
+      setIsCreatingTransaction(false);
+    }
   };
 
-  if (loading) {
+  // Combine hook loading state with your rest endpoint loading state
+  if (loading || epcLoading) {
     return (
       <div className="loan-details-container">
-        <h3>Loading Details...</h3>
+        <h3>Loading Details and connecting to Encompass...</h3>
       </div>
     );
   }
 
-  if (error) {
+  // Combine hook initialization error blocks with your fetch errors
+  if (error || epcError) {
     return (
       <div className="loan-details-container">
         <h3 style={{ color: "red" }}>Error</h3>
-        <p>{error}</p>
+        <p>{error || epcError}</p>
       </div>
     );
   }
@@ -116,7 +159,6 @@ const DetailsView = () => {
   return (
     <div className="loan-details-container">
       {loanData && (
-        /* The form wrapper now surrounds both the card and the outside action row */
         <form onSubmit={handleSubmit} className="details-form-wrapper">
           <div className="primary-details-card">
             <div className="card-header">
@@ -128,7 +170,7 @@ const DetailsView = () => {
                 {/* Row 1 */}
                 <div className="form-group">
                   <label className={loanData.borrowerName ? "floating" : ""}>
-                     Borrower Name
+                    Borrower Name
                   </label>
                   <input
                     type="text"
@@ -182,10 +224,13 @@ const DetailsView = () => {
             </div>
           </div>
 
-          {/* Form Actions are now OUTSIDE the white card layout */}
           <div className="form-actions-outside">
-            <button type="submit" className="submit-btn">
-              Submit
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={isCreatingTransaction}
+            >
+              {isCreatingTransaction ? "Creating Transaction..." : "Submit"}
             </button>
           </div>
         </form>
