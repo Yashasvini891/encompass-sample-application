@@ -116,7 +116,7 @@ const DetailsView = () => {
         "Sending all 4 fields cleanly nested inside the request object wrapper...",
       );
 
-      // We wrap the payload inside the required 'request' object property
+      //  WHAT IS CORRECT:
       const newTransactionId = await client.createTransaction({
         request: {
           type: "ZIP Code Validation",

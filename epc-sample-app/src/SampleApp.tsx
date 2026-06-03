@@ -29,7 +29,15 @@ const EncompassMode = () => {
         // Extract unique identifier string from the EPC framework transaction context dataset
         const currentTransactionId = transactionOrigin.transactionId;
 
-        // --- JUST THE 2 CONSOLE LOGS ---
+        console.log("1. Full applicationInfo object payload:", applicationInfo);
+        console.log(
+          "   👉 DECODED PRODUCT NAME VALUE:",
+          applicationInfo?.productName,
+        );
+        console.log(
+          "   👉 TARGET RUNTIME ENVIRONMENT:",
+          applicationInfo?.environment,
+        );
         console.log(
           "1. Full transactionOrigin object from Encompass:",
           transactionOrigin,
