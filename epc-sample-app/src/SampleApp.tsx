@@ -97,39 +97,11 @@ const EncompassMode = () => {
 };
 
 const StandaloneMode = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const initializeStandalone = async () => {
-      try {
-
-        const partnerAccessToken = "TEST_TOKEN_123";
-        const originId = "TEST123";
-
-        const payload = {
-          messageName: "epc_origin-R",
-          origin_id: originId,
-          partner_access_token: partnerAccessToken,
-        };
-
-        console.log(" FINAL PAYLOAD:", payload);
-
-        navigate(`/details/${originId}`, {
-          state: {
-            originId,
-            partnerAccessToken,
-           
-          },
-        });
-      } catch (error) {
-        console.error("Failed to fetch access token:", error);
-      }
-    };
-
-    initializeStandalone();
-  }, [navigate]);
-
-  return <h2>Standalone TEST</h2>;
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>Standalone Mode</h1>
+    </div>
+  );
 };
 const SampleApp = () => {
   const [mode, setMode] = useState<"loading" | "encompass" | "standalone">(
