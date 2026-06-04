@@ -115,7 +115,7 @@ const DetailsView = () => {
             body: JSON.stringify({
               type: "mock",
               response: currentMode ? "success" : "failed",
-              transactionId,
+              
             }),
           },
         );
