@@ -30,7 +30,9 @@ const DetailsView = () => {
 
   const [status, setStatus] = useState<string | null>(null);
   const [statusLoading, setStatusLoading] = useState<boolean>(false);
-  const [isSuccessMode, setIsSuccessMode] = useState<boolean>(true);
+
+  // Initialized to 'false' so it starts in the OFF state
+  const [isSuccessMode, setIsSuccessMode] = useState<boolean>(false);
 
   // ---------------- FETCH LOAN DETAILS ----------------
   useEffect(() => {
@@ -96,51 +98,54 @@ const DetailsView = () => {
     }
   }, [transactionId, originId, partnerAccessToken]);
 
-const fetchStatus = useCallback(async () => {
-  try {
-    setStatusLoading(true);
+  // ---------------- FETCH STATUS ----------------
+  const fetchStatus = useCallback(
+    async (currentMode: boolean = isSuccessMode) => {
+      try {
+        setStatusLoading(true);
 
-    const response = await fetch(
-      "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/epcStatus",
-      {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "mock",
-          response: isSuccessMode ? "success" : "failed",
-          transactionId,
-        }),
-      },
-    );
+        const response = await fetch(
+          "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/epcStatus",
+          {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "mock",
+              response: currentMode ? "success" : "failed",
+              transactionId,
+            }),
+          },
+        );
 
-    const data = await response.json();
+        const data = await response.json();
+        let mappedStatus = null; // FIXED: Default fallback removed
 
-    let mappedStatus = "IN_PROGRESS";
+        // Explicitly map strictly based on backend response values
+        if (data.response === "success") {
+          mappedStatus = "COMPLETED";
+        } else if (data.response === "failed") {
+          mappedStatus = "FAILED";
+        }
 
-    if (data.response === "success") {
-      mappedStatus = "COMPLETED";
-    } else if (data.response === "failed") {
-      mappedStatus = "FAILED";
-    }
+        setStatus(mappedStatus);
+        return mappedStatus;
+      } catch (error) {
+        console.error("Error fetching status:", error);
+        return null;
+      } finally {
+        setStatusLoading(false);
+      }
+    },
+    [transactionId, isSuccessMode],
+  );
 
-    setStatus(mappedStatus);
-
-    return mappedStatus;
-  } catch (error) {
-    console.error("Error fetching status:", error);
-    return null;
-  } finally {
-    setStatusLoading(false);
-  }
-}, [transactionId, isSuccessMode]);
-
-useEffect(() => {
-  if (!transactionId) return;
-  fetchStatus(); // initial call
-}, [fetchStatus, transactionId]);
+  useEffect(() => {
+    if (!transactionId) return;
+    fetchStatus(); // initial call
+  }, [transactionId]);
 
   // ---------------- INPUT CHANGE ----------------
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,10 +166,10 @@ useEffect(() => {
         request: {
           type: "Submit Tax Wallet",
           options: {
-            borrowerName: loanData.borrowerName,
-            coBorrowerName: loanData.coBorrowerName,
-            loanNumber: loanData.loanNumber,
-            streetAddress: loanData.streetAddress,
+            borrowerName: "Lisa Smith",
+            coBorrowerName: "Mucas Jones",
+            loanNumber: "347832984",
+            streetAddress: "1234 Main St, Anytown, USA",
           },
         },
       });
@@ -177,8 +182,6 @@ useEffect(() => {
             : newTransactionId
         }`,
       );
-
-      // navigate(`/details/${newTransactionId}`);
     } catch (err) {
       console.error("Failed to execute createTransaction:", err);
     } finally {
@@ -189,45 +192,58 @@ useEffect(() => {
   // ---------------- STATUS UI ----------------
   if (transactionId) {
     return (
-      <div className="loan-details-container">
-        <h2>Transaction Status</h2>
+      <div
+        className="loan-details-container"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+          alignItems: "flex-start",
+        }}
+      >
+        <h2 style={{ margin: 0 }}>Transaction Status</h2>
 
-        <p>
+        <p style={{ margin: 0 }}>
           <strong>ID:</strong> {transactionId}
         </p>
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ marginRight: "10px" }}>Mock Status:</label>
-          <label className="switch">
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span style={{ fontWeight: 500 }}>Mock Status:</span>
+          <label
+            className="switch"
+            style={{ display: "inline-flex", alignItems: "center", margin: 0 }}
+          >
             <input
               type="checkbox"
               checked={isSuccessMode}
               onChange={async () => {
-                setIsSuccessMode((prev) => !prev);
-                await fetchStatus(); 
+                const nextMode = !isSuccessMode;
+                setIsSuccessMode(nextMode);
+                await fetchStatus(nextMode); // Trigger endpoint immediately on switch toggle
               }}
             />
             <span className="slider"></span>
           </label>
         </div>
 
-        {statusLoading ? (
-          <CircularProgress />
-        ) : (
+        <div
+          style={{ minHeight: "40px", display: "flex", alignItems: "center" }}
+        >
+          {statusLoading ? (
+            <CircularProgress size={24} />
+          ) : (
             status && (
-          <h3
-            style={{
-              color:
-                status === "COMPLETED"
-                  ? "green"
-                  : status === "FAILED"
-                    ? "red"
-                    : "orange",
-            }}
-          >
-            {status}
+              <h3
+                style={{
+                  margin: 0,
+                  color: status === "COMPLETED" ? "green" : "red",
+                }}
+              >
+                Status: {status}
               </h3>
             )
-        )}
+          )}
+        </div>
       </div>
     );
   }
@@ -248,6 +264,7 @@ useEffect(() => {
       </div>
     );
   }
+
   return (
     <div className="loan-details-container">
       {loanData && (
@@ -306,9 +323,6 @@ useEffect(() => {
                     onChange={handleInputChange}
                   />
                 </div>
-
-                <div className="form-group empty-placeholder"></div>
-                <div className="form-group empty-placeholder"></div>
               </div>
             </div>
           </div>
