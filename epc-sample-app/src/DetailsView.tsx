@@ -176,13 +176,8 @@ const DetailsView = () => {
           },
         },
       });
-      // FIX: Assign it directly since it is already a string
       const realTransactionId = newTransactionId;
-
-      // Log the fetched transaction ID to the browser console
       console.log("Fetched Transaction ID from UI:", realTransactionId);
-
-      // Navigate using the real ID taken from the UI response
       navigate(`/details/${realTransactionId}`);
     } catch (err) {
       console.error("Failed to execute createTransaction:", err);
@@ -203,6 +198,13 @@ const DetailsView = () => {
           alignItems: "flex-start",
         }}
       >
+        <button
+          type="button"
+          onClick={() => client?.closeTransaction()}
+          className="submit-btn"
+        >
+          Close
+        </button>
         <h2 style={{ margin: 0 }}>Transaction Status</h2>
 
         <p style={{ margin: 0 }}>
@@ -356,6 +358,13 @@ const DetailsView = () => {
               disabled={isCreatingTransaction}
             >
               {isCreatingTransaction ? "Creating Transaction..." : "Submit"}
+            </button>
+            <button
+              type="button"
+              className="submit-btn" // You can style this cleanly in DetailsView.css
+              onClick={() => client?.closeTransaction()}
+            >
+              Close
             </button>
           </div>
         </form>
