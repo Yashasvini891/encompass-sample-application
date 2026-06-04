@@ -139,17 +139,19 @@ const fetchStatus = useCallback(async () => {
 useEffect(() => {
   if (!transactionId) return;
 
+  let interval: any;
+
   const loadStatus = async () => {
     const result = await fetchStatus();
 
     if (result === "COMPLETED" || result === "FAILED") {
-      clearInterval(interval); // stop polling
+      clearInterval(interval);
     }
   };
 
   loadStatus();
 
-  const interval = setInterval(loadStatus, 2000); 
+  interval = setInterval(loadStatus, 2000);
 
   return () => clearInterval(interval);
 }, [fetchStatus, transactionId]);
