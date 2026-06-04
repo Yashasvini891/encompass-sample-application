@@ -176,15 +176,14 @@ const DetailsView = () => {
           },
         },
       });
-      const USE_TEST_ID = true;
+      // FIX: Assign it directly since it is already a string
+      const realTransactionId = newTransactionId;
 
-      navigate(
-        `/details/${
-          USE_TEST_ID
-            ? "85c53114-56d5-4f6a-a1a7-8a250af02572"
-            : newTransactionId
-        }`,
-      );
+      // Log the fetched transaction ID to the browser console
+      console.log("Fetched Transaction ID from UI:", realTransactionId);
+
+      // Navigate using the real ID taken from the UI response
+      navigate(`/details/${realTransactionId}`);
     } catch (err) {
       console.error("Failed to execute createTransaction:", err);
     } finally {
