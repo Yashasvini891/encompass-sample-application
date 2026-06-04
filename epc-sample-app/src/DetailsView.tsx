@@ -104,6 +104,7 @@ const fetchStatus = useCallback(async () => {
       "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/epcStatus",
       {
         method: "PATCH",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
@@ -138,22 +139,7 @@ const fetchStatus = useCallback(async () => {
 
 useEffect(() => {
   if (!transactionId) return;
-
-  let interval: any;
-
-  const loadStatus = async () => {
-    const result = await fetchStatus();
-
-    if (result === "COMPLETED" || result === "FAILED") {
-      clearInterval(interval);
-    }
-  };
-
-  loadStatus();
-
-  interval = setInterval(loadStatus, 2000);
-
-  return () => clearInterval(interval);
+  fetchStatus(); // initial call
 }, [fetchStatus, transactionId]);
 
   // ---------------- INPUT CHANGE ----------------
@@ -211,23 +197,23 @@ useEffect(() => {
         </p>
         <div style={{ marginBottom: "15px" }}>
           <label style={{ marginRight: "10px" }}>Mock Status:</label>
-          <button
-            onClick={() => setIsSuccessMode((prev) => !prev)}
-            style={{
-              padding: "6px 12px",
-              backgroundColor: isSuccessMode ? "green" : "red",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            {isSuccessMode ? "SUCCESS" : "FAILED"}
-          </button>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={isSuccessMode}
+              onChange={async () => {
+                setIsSuccessMode((prev) => !prev);
+                await fetchStatus(); 
+              }}
+            />
+            <span className="slider"></span>
+          </label>
         </div>
 
         {statusLoading ? (
           <CircularProgress />
         ) : (
+            status && (
           <h3
             style={{
               color:
@@ -238,8 +224,9 @@ useEffect(() => {
                     : "orange",
             }}
           >
-            {status || "Processing..."}
-          </h3>
+            {status}
+              </h3>
+            )
         )}
       </div>
     );
