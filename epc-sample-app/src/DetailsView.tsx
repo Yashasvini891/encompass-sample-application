@@ -103,7 +103,7 @@ const fetchStatus = useCallback(async () => {
     const response = await fetch(
       "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/epcStatus",
       {
-        method: "PATCH",
+        method: "POST",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
