@@ -31,6 +31,9 @@ const DetailsView = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [statusLoading, setStatusLoading] = useState<boolean>(false);
 
+  // Holds the exact text from data.message ("Transaction status updated successfully")
+  const [apiMessage, setApiMessage] = useState<string | null>(null);
+
   // Initialized to 'false' so it starts in the OFF state
   const [isSuccessMode, setIsSuccessMode] = useState<boolean>(false);
 
@@ -103,6 +106,7 @@ const DetailsView = () => {
     async (currentMode: boolean = isSuccessMode) => {
       try {
         setStatusLoading(true);
+        setApiMessage(null); // Reset previous message text on click
 
         const response = await fetch(
           "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/epcStatus",
@@ -121,9 +125,13 @@ const DetailsView = () => {
         );
 
         const data = await response.json();
-        let mappedStatus = null; // FIXED: Default fallback removed
+        let mappedStatus = null;
 
-        // Explicitly map strictly based on backend response values
+        // Always grab the exact message sent by the endpoint response body
+        if (data.message) {
+          setApiMessage(data.message);
+        }
+
         if (data.response === "success") {
           mappedStatus = "COMPLETED";
         } else if (data.response === "failed") {
@@ -139,13 +147,8 @@ const DetailsView = () => {
         setStatusLoading(false);
       }
     },
-    [transactionId, isSuccessMode],
+    [transactionId],
   );
-
-  useEffect(() => {
-    if (!transactionId) return;
-    fetchStatus(); // initial call
-  }, [transactionId]);
 
   // ---------------- INPUT CHANGE ----------------
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,7 +222,7 @@ const DetailsView = () => {
               onChange={async () => {
                 const nextMode = !isSuccessMode;
                 setIsSuccessMode(nextMode);
-                await fetchStatus(nextMode); // Trigger endpoint immediately on switch toggle
+                await fetchStatus(nextMode);
               }}
             />
             <span className="slider"></span>
@@ -227,21 +230,41 @@ const DetailsView = () => {
         </div>
 
         <div
-          style={{ minHeight: "40px", display: "flex", alignItems: "center" }}
+          style={{
+            minHeight: "60px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "4px",
+          }}
         >
           {statusLoading ? (
             <CircularProgress size={24} />
           ) : (
-            status && (
-              <h3
-                style={{
-                  margin: 0,
-                  color: status === "COMPLETED" ? "green" : "red",
-                }}
-              >
-                Status: {status}
-              </h3>
-            )
+            <>
+              {status && (
+                <h3
+                  style={{
+                    margin: 0,
+                    color: status === "COMPLETED" ? "green" : "red",
+                  }}
+                >
+                  Status: {status}
+                </h3>
+              )}
+              {apiMessage && (
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#555555", // Using a clean grey color to smoothly accommodate the message style
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
+                >
+                  {apiMessage}
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>
