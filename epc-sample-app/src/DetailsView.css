@@ -90,6 +90,7 @@
     justify-content: flex-end;
     margin-top: 20px; 
     padding-right: 4px;
+    gap:20px;
 }
 .submit-btn {
     height: 46px;
