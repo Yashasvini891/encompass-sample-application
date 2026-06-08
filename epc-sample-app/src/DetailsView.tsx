@@ -189,6 +189,7 @@ const DetailsView = () => {
            },
            body: JSON.stringify({
              transactionId: realTransactionId,
+             messageName: "epc_transaction-R",
            }),
          },
        );
