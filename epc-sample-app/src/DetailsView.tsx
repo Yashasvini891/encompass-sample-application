@@ -177,6 +177,18 @@ const DetailsView = () => {
       });
       const realTransactionId = newTransactionId;
       console.log("Fetched Transaction ID from UI:", realTransactionId);
+       await fetch(
+         "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/demo-webhook",
+         {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+           },
+           body: JSON.stringify({
+             transactionId: realTransactionId,
+           }),
+         },
+       );
       navigate(`/details/${realTransactionId}`);
     } catch (err) {
       console.error("Failed to execute createTransaction:", err);
@@ -283,6 +295,7 @@ const DetailsView = () => {
     return (
       <div className="loan-details-container">
         <h3 style={{ color: "red" }}>Error</h3>
+        <br />
         <p>{error || epcError}</p>
       </div>
     );
