@@ -175,7 +175,10 @@ const DetailsView = () => {
           },
         },
       });
-      const realTransactionId = newTransactionId;
+     const realTransactionId =
+       typeof newTransactionId === "string"
+         ? newTransactionId
+         : (newTransactionId as { id: string }).id;
       console.log("Fetched Transaction ID from UI:", realTransactionId);
        await fetch(
          "https://scppchay6k.execute-api.us-west-2.amazonaws.com/testdev/demo-webhook",
