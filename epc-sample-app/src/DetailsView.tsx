@@ -161,7 +161,6 @@ const DetailsView = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loanData || !client) return;
-
     try {
       setIsCreatingTransaction(true);
 
@@ -169,10 +168,10 @@ const DetailsView = () => {
         request: {
           type: "Submit Tax Wallet",
           options: {
-            borrowerName: loanData.borrowerName,
-            coBorrowerName: loanData.coBorrowerName,
-            loanNumber: loanData.loanNumber,
-            streetAddress: loanData.streetAddress,
+            borrowerName: "Lisa Smith", 
+            coBorrowerName: "John Doe", 
+            loanNumber: "123456789",
+            streetAddress: "123 Main Street",
           },
         },
       });
