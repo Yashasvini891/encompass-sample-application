@@ -167,10 +167,10 @@ const DetailsView = () => {
         request: {
           type: "Submit Tax Wallet",
           options: {
-            borrowerName: "Lisa Smith", 
-            coBorrowerName: "John Doe", 
-            loanNumber: "123456789",
-            streetAddress: "123 Main Street",
+            borrowerName: loanData.borrowerName,
+            coBorrowerName: loanData.coBorrowerName,
+            loanNumber: loanData.loanNumber,
+            streetAddress: loanData.streetAddress,
           },
         },
       });
